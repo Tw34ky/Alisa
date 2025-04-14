@@ -24,7 +24,7 @@ logging.basicConfig(level=logging.INFO)
 sessionStorage = {}
 
 
-@app.route('/post', methods=['POST'])
+@app.route('/', methods=['POST'])
 # Функция получает тело запроса и возвращает ответ.
 # Внутри функции доступен request.json - это JSON, который отправила нам Алиса в запросе POST
 def main():
@@ -120,5 +120,4 @@ def get_suggests(user_id):
     return suggests
 
 
-if __name__ == '__main__':
-    app.run()
+app.run()
