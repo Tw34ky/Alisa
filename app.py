@@ -90,6 +90,13 @@ def handle_dialog(req, res):
     ]:
         # Пользователь согласился, прощаемся.
         res['response']['text'] = 'Слона можно найти на Яндекс.Маркете! \n А теперь купи кролика!'
+        sessionStorage[user_id] = {
+            'suggests': [
+                "Не хочу.",
+                "Не буду.",
+                "Отстань!",
+            ]
+        }
         res['response']['buttons'] = get_suggests(user_id)
         elep = True
         return
@@ -131,6 +138,7 @@ def get_suggests(user_id):
                 "url": "https://market.yandex.ru/search?text=слон",
                 "hide": True
             })
+    print(suggests)
     return suggests
 
 
