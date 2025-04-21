@@ -91,7 +91,6 @@ def handle_dialog(req, res):
         # Пользователь согласился, прощаемся.
         res['response']['text'] = 'Слона можно найти на Яндекс.Маркете! \n А теперь купи кролика!'
         elep = True
-        res['response']['end_session'] = True
         return
 
     # Если нет, то убеждаем его купить слона!
@@ -125,12 +124,12 @@ def get_suggests(user_id):
                 "url": "https://market.yandex.ru/search?text=кролик",
                 "hide": True
             })
-        suggests.append({
-            "title": "Ладно",
-            "url": "https://market.yandex.ru/search?text=слон",
-            "hide": True
-        })
-
+        else:
+            suggests.append({
+                "title": "Ладно",
+                "url": "https://market.yandex.ru/search?text=слон",
+                "hide": True
+            })
     return suggests
 
 
