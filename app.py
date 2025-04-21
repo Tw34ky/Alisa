@@ -90,6 +90,7 @@ def handle_dialog(req, res):
     ]:
         # Пользователь согласился, прощаемся.
         res['response']['text'] = 'Слона можно найти на Яндекс.Маркете! \n А теперь купи кролика!'
+        res['response']['buttons'] = get_suggests(user_id)
         elep = True
         return
 
