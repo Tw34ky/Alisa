@@ -6,6 +6,7 @@ import logging
 # библиотека, которая нам понадобится для работы с JSON
 import json
 
+elep = False
 # создаем приложение
 # мы передаем __name__, в нем содержится информация, в каком модуле мы находимся.
 # В данном случае там содержится '__main__', так как мы обращаемся к переменной из запущенного модуля.
@@ -23,9 +24,11 @@ logging.basicConfig(level=logging.INFO)
 # то мы уберем одну подсказку. Как будто что-то меняется :)
 sessionStorage = {}
 
+
 @app.route('/index')
 def index():
     return 'hello world'
+
 
 @app.route('/post', methods=['POST'])
 # Функция получает тело запроса и возвращает ответ.
@@ -54,6 +57,7 @@ def main():
 
 
 def handle_dialog(req, res):
+    global elep
     user_id = req['session']['user_id']
 
     if req['session']['new']:
@@ -86,6 +90,7 @@ def handle_dialog(req, res):
     ]:
         # Пользователь согласился, прощаемся.
         res['response']['text'] = 'Слона можно найти на Яндекс.Маркете! \n А теперь купи кролика!'
+        elep = True
         res['response']['end_session'] = True
         return
 
@@ -98,6 +103,7 @@ def handle_dialog(req, res):
 
 # Функция возвращает две подсказки для ответа.
 def get_suggests(user_id):
+    global elep
     session = sessionStorage[user_id]
 
     # Выбираем две первые подсказки из массива.
@@ -113,6 +119,12 @@ def get_suggests(user_id):
     # Если осталась только одна подсказка, предлагаем подсказку
     # со ссылкой на Яндекс.Маркет.
     if len(suggests) < 2:
+        if elep:
+            suggests.append({
+                "title": "Ладно",
+                "url": "https://market.yandex.ru/search?text=кролик",
+                "hide": True
+            })
         suggests.append({
             "title": "Ладно",
             "url": "https://market.yandex.ru/search?text=слон",
@@ -120,5 +132,6 @@ def get_suggests(user_id):
         })
 
     return suggests
+
 
 app.run(host="0.0.0.0", port=10000)
