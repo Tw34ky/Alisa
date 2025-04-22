@@ -31,20 +31,23 @@ def get_distance(p1, p2):
 
 def get_country(city):
     url = "https://geocode-maps.yandex.ru/1.x/"
-
+    apikey = "f3a0fe3a-b07e-4840-a1da-06f18b2ddf13"
     params = {
         'geocode': city,
         'format': 'json',
-        'apikey': "40d1649f-0493-4b70-98ba-98533de7710b"
+        'apikey': "8013b162-6b42-4997-9691-77b7074026e0"
     }
-
+    url_str = f"https://geocode-maps.yandex.ru/1.x?apikey={apikey}&geocode={city}&format=json"
     response = requests.get(url, params)
     json = response.json()
-
+    try:
+        j = json['response']
+    except KeyError:
+        print("Http статус:", response.status_code, "(", response.reason, ")")
+        print(url_str)
     return \
         json['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['metaDataProperty'][
-            'GeocoderMetaData'][
-            'AddressDetails']['Country']['CountryName']
+            'GeocoderMetaData']['AddressDetails']['Country']['CountryName']
 
 
 def get_coordinates(city):
@@ -104,6 +107,7 @@ def handle_dialog(res, req):
     if len(cities) == 0:
         res['response']['text'] = 'Ты не написал название не одного города!'
     elif len(cities) == 1:
+        print(get_country(cities[0]))
         res['response']['text'] = 'Этот город в стране - ' + get_country(cities[0])
     elif len(cities) == 2:
         distance = get_distance(get_coordinates(cities[0]), get_coordinates(cities[1]))
